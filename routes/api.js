@@ -3,6 +3,7 @@
 const ConvertHandler = require('../controllers/convertHandler.js');
 
 module.exports = function (app) {
+
   const convertHandler = new ConvertHandler();
 
   app.route('/api/convert')
@@ -16,23 +17,26 @@ module.exports = function (app) {
       if (initNum === 'invalid number' && initUnit === 'invalid unit') {
         return res.send('invalid number and unit');
       }
+
       if (initNum === 'invalid number') {
         return res.send('invalid number');
       }
+
       if (initUnit === 'invalid unit') {
         return res.send('invalid unit');
       }
 
-      const returnUnit = convertHandler.getReturnUnit(initUnit);
       const returnNum = convertHandler.convert(initNum, initUnit);
-      const string = `${initNum} ${convertHandler.spellOutUnit(initUnit)} converts to ${returnNum} ${convertHandler.spellOutUnit(returnUnit)}`;
+      const returnUnit = convertHandler.getReturnUnit(initUnit);
+      const initUnitString = convertHandler.spellOutUnit(initUnit);
+      const returnUnitString = convertHandler.spellOutUnit(returnUnit);
 
       res.json({
         initNum,
         initUnit,
         returnNum,
         returnUnit,
-        string
+        string: `${initNum} ${initUnitString} converts to ${returnNum} ${returnUnitString}`
       });
     });
 };
